@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cn.tsoft.framework.lock.DefaultLockCallBack;
 import cn.tsoft.framework.lock.Lock;
 import cn.tsoft.framework.redis.client.RedisClient;
 
