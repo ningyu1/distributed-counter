@@ -21,7 +21,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import cn.tsoft.framework.counter.Counter;
-import cn.tsoft.framework.redis.client.RedisClient;
+import cn.tsoft.framework.redis.client.IRedisClient;
 import cn.tsoft.framework.test.BaseJunitTestWithContext;
 
 /**
@@ -36,12 +36,14 @@ public class CounterRedisImplTest extends BaseJunitTestWithContext {
 	
 	private final Logger logger = LoggerFactory.getLogger(CounterRedisImplTest.class);
 	
+	private static final String COUNTER_NAMESPACE = "COUNTER";
+	
     @Autowired
     Counter counter;
     long count=0;
     
     @Autowired
-    RedisClient redisClient;
+    IRedisClient redisClient;
     
     private  synchronized void add (){
         count=count+1;
@@ -60,7 +62,7 @@ public class CounterRedisImplTest extends BaseJunitTestWithContext {
         final String key="TestKey8";
         logger.info("开始执行testIncrease，redis中counter值：{}", counter.getCount(key));
         logger.info("清除redis中counter值");
-        redisClient.del("COUNT_"+key);
+        redisClient.del("COUNT_"+key, COUNTER_NAMESPACE);
         int poolSize = 20;
         ExecutorService pools = Executors.newFixedThreadPool(20);
         long  begin=System.currentTimeMillis();

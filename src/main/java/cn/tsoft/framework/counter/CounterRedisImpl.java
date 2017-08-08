@@ -14,9 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.tsoft.framework.lock.DefaultLockCallBack;
+import cn.tsoft.framework.lock.DefaultLockCallback;
 import cn.tsoft.framework.lock.Lock;
-import cn.tsoft.framework.redis.client.RedisClient;
+import cn.tsoft.framework.redis.client.IRedisClient;
 
 /**
  * 计数器 redis实现<br> 
@@ -30,9 +30,11 @@ public class CounterRedisImpl implements Counter  {
     
     private final Logger logger = LoggerFactory.getLogger(CounterRedisImpl.class);
     
+    private static final String COUNTER_NAMESPACE = "COUNTER";
+    
     private Lock lock;
      
-    private RedisClient redisClient;
+    private IRedisClient redisClient;
 	
 	private MergeDBCallBack mergeDBCallBack = new DefaultMergeDBCallBack();
 
@@ -40,9 +42,9 @@ public class CounterRedisImpl implements Counter  {
         this.lock = lock;
     }
 
-	public void setRedisClient(RedisClient redisClient) {
-		this.redisClient = redisClient;
-	}
+    public void setRedisClient(IRedisClient redisClient) {
+        this.redisClient = redisClient;
+    }
 
 	public void setMergeDBCallBack(MergeDBCallBack mergeDBCallBack) {
 		this.mergeDBCallBack = mergeDBCallBack;
@@ -54,10 +56,10 @@ public class CounterRedisImpl implements Counter  {
     @Override
     public boolean increase(final String key, final long span, final long threshold) {
 		final String countKey = genereateKey(key);
-		return lock.lock(countKey, 100, 30, new DefaultLockCallBack<Boolean>(false, false) {
+		return lock.lock(countKey, 100, 30, new DefaultLockCallback<Boolean>(false, false) {
 			@Override
 			public Boolean handleObtainLock() {
-				String value = redisClient.get(countKey);
+				String value = redisClient.get(countKey, COUNTER_NAMESPACE, null);
 				// 如果为空，返回false
 				if (value != null) {
 					Long currentCount = Long.valueOf(value);
@@ -65,7 +67,7 @@ public class CounterRedisImpl implements Counter  {
 						return false;
 					}
 				}
-				redisClient.incrBy(countKey, span);
+				redisClient.incrBy(countKey, COUNTER_NAMESPACE, span);
 				mergeDBRedisCount(countKey, value, span, true);
 				return true;
 			}
@@ -77,10 +79,10 @@ public class CounterRedisImpl implements Counter  {
     @Override
     public boolean decrease(final String key, final long span) {
 		final String countKey = genereateKey(key);
-		return lock.lock(countKey, 100, 30, new DefaultLockCallBack<Boolean>(false, false) {
+		return lock.lock(countKey, 100, 30, new DefaultLockCallback<Boolean>(false, false) {
 			@Override
 			public Boolean handleObtainLock() {
-				String value = redisClient.get(countKey);
+				String value = redisClient.get(countKey, COUNTER_NAMESPACE, null);
 				// 如果为空，返回false
 				if (value == null) {
 					return false;
@@ -89,7 +91,7 @@ public class CounterRedisImpl implements Counter  {
 				if (currentCount - span < 0) {
 					return false;
 				} else {
-					redisClient.decrBy(countKey, span);
+					redisClient.decrBy(countKey, COUNTER_NAMESPACE, span);
 					mergeDBRedisCount(countKey, value, span, false);
 					return true;
 				}
@@ -106,7 +108,7 @@ public class CounterRedisImpl implements Counter  {
     @Override
     public long getCount(String key) {
 		final String countKey = genereateKey(key);
-		String value = redisClient.get(countKey);
+		String value = redisClient.get(countKey, COUNTER_NAMESPACE, null);
 		Long currentCount = 0l;
 		try {
 			// 如果为空，返回false
