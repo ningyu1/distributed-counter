@@ -9,7 +9,7 @@
    	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
    	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
-	<bean id="counter" class="com.jiuyescm.framework.counter.CounterRedisImpl">
+	<bean id="counter" class="io.github.ningyu.counter.CounterRedisImpl">
 		<property name="lock" ref="lock"></property>
 		<property name="redisClient" ref="redisClient"></property>
 	</bean>

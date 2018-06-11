@@ -8,7 +8,10 @@
  * <author>      <time>      <version>    <desc>
  * 修改人姓名             修改时间            版本号                  描述
  */
-package cn.tsoft.framework.counter.test;
+package io.github.ningyu.counter.test;
+
+import io.github.ningyu.counter.Counter;
+import io.github.ningyu.test.BaseJunitTestWithContext;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import cn.tsoft.framework.counter.Counter;
-import cn.tsoft.framework.redis.client.IRedisClient;
-import cn.tsoft.framework.test.BaseJunitTestWithContext;
+import io.github.ningyu.redis.client.IRedisClient;
 
 /**
  * 〈一句话功能简述〉<br>

@@ -8,15 +8,16 @@
  * <author>      <time>      <version>    <desc>
  * 修改人姓名             修改时间            版本号                  描述
  */
-package cn.tsoft.framework.counter;
+package io.github.ningyu.counter;
+
+import io.github.ningyu.lock.DefaultLockCallback;
+import io.github.ningyu.lock.Lock;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.tsoft.framework.lock.DefaultLockCallback;
-import cn.tsoft.framework.lock.Lock;
-import cn.tsoft.framework.redis.client.IRedisClient;
+import io.github.ningyu.redis.client.IRedisClient;
 
 /**
  * 计数器 redis实现<br> 
