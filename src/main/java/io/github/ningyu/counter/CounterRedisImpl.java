@@ -52,7 +52,7 @@ public class CounterRedisImpl implements Counter  {
 	}
 
 	/* (non-Javadoc)
-     * @see com.saic.ebiz.mms.common.util.counter.Counter#increase(java.lang.String, int)
+     * @see io.github.ningyu.counter.Counter#increase(java.lang.String, int)
      */
     @Override
     public boolean increase(final String key, final long span, final long threshold) {
@@ -104,7 +104,7 @@ public class CounterRedisImpl implements Counter  {
     }
 
     /* (non-Javadoc)
-     * @see com.saic.ebiz.mms.common.util.counter.Counter#getCount(java.lang.String)
+     * @see io.github.ningyu.counter.Counter#getCount(java.lang.String)
      */
     @Override
     public long getCount(String key) {
